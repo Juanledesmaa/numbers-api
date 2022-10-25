@@ -1,0 +1,29 @@
+name: interview
+options:
+  carthageExecutablePath: 'mint run carthage carthage'
+targets:
+  interview:
+    type: application
+    platform: iOS
+    deploymentTarget: 13.0
+    sources: [interview]
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.interview.ios
+      SWIFT_VERSION: '5.0'
+    postCompileScripts:
+      - script: |
+          export PATH="$PATH:/opt/homebrew/bin"
+          if mint list | grep -q 'SwiftLint'; then
+          mint run SwiftLint swiftlint autocorrect
+          mint run SwiftLint swiftlint
+          else
+          echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
+          fi
+        name: Swiftlint
+  interviewTests:
+    type: bundle.unit-test
+    platform: iOS
+    deploymentTarget: '10.0'
+    sources: [interviewTests]
+    dependencies:
+      - target: interview
